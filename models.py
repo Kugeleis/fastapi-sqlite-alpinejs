@@ -11,7 +11,7 @@ class Employee(SQLModel, table=True):
     surname: str
     job_title: str
     department_id: Optional[int] = Field(None, foreign_key="department.id")
-    department: Optional["Department"] = Relationship(back_populates="employee")
+    department: Optional["Department"] = Relationship(back_populates="employees")
 
 
 class Department(SQLModel, table=True):

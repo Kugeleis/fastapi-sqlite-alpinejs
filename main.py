@@ -1,9 +1,11 @@
+import json
 from typing import List
+from unittest import result
 
 import uvicorn
 from fastapi import Depends, FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
 
@@ -16,8 +18,12 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/employees", response_class=HTMLResponse)
 def employees(request: Request, session: Session = Depends(get_session)):
-    employees = session.exec(select(Employee))
-    context = {"request": request, "employees": employees}
+    # employees = session.exec(select(Employee))
+    stmt = select(Employee, Department).where(Employee.department_id == Department.id)
+    result = session.exec(stmt).all()
+    employee_data = jsonable_encoder(result)
+    print("emp: ", employee_data[0])
+    context = {"request": request, "employees": json.dumps(employee_data)}
     return templates.TemplateResponse("employees.html", context)
 
 

@@ -16,10 +16,11 @@
   <body>
     <div
       class="mx-4"
-      x-data="{results: {{ employees }},chosenDepartment: null}"
+      x-data="{results: {{ employees }},chosenDepartment: 'ALL'}"
     >
       <h1 class="text-2xl font-bold mb-4">Employees</h1>
       <select name="department" id="dep" x-model="chosenDepartment">
+        <option name="dep" value="ALL">ALL</option>
         {% for department in departments %}
         <option name="dep" value="{{department}}">{{ department }}</option>
         {% endfor %}
@@ -35,7 +36,7 @@
         </th>
         <tbody>
           <template
-            x-for="result in results.filter(r=> r.Department.name == chosenDepartment)"
+            x-for="result in results.filter(r=> chosenDepartment == 'ALL' || r.Department.name == chosenDepartment)"
           >
             <tr class="bg-white border-b dark:bg-gery-800 dark:border-gray-700">
               <td x-text="result.Employee.first_name"></td>

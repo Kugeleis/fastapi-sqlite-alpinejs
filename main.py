@@ -22,8 +22,13 @@ def employees(request: Request, session: Session = Depends(get_session)):
     stmt = select(Employee, Department).where(Employee.department_id == Department.id)
     result = session.exec(stmt).all()
     employee_data = jsonable_encoder(result)
+    departments = set([emp["Department"]["name"] for emp in employee_data])
     print("emp: ", employee_data[0])
-    context = {"request": request, "employees": json.dumps(employee_data)}
+    context = {
+        "request": request,
+        "employees": json.dumps(employee_data),
+        "departments": departments,
+    }
     return templates.TemplateResponse("employees.html", context)
 
 
